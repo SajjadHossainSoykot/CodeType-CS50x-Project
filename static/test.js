@@ -314,21 +314,40 @@
             }
         }
 
-        // Enter key → insert newline character
+        // Enter key → insert newline character & auto-indent matching leading spaces
         if (e.key === "Enter") {
             e.preventDefault();
             var startPos = typingInput.selectionStart;
-            var beforeEnter = typingInput.value.substring(0, startPos);
-            var afterEnter = typingInput.value.substring(typingInput.selectionEnd);
-            typingInput.value = beforeEnter + "\n" + afterEnter;
-            typingInput.selectionStart = typingInput.selectionEnd = startPos + 1;
 
             if (!timerStarted) {
                 startTimer();
             }
 
-            totalKeystrokes++;
-            if (startPos < targetCode.length && "\n" !== targetCode[startPos]) {
+            // Check if expected character is indeed a newline
+            if (startPos < targetCode.length && targetCode[startPos] === "\n") {
+                // Collect leading spaces on the next line for auto-indentation
+                var autoIndent = "";
+                var nextIdx = startPos + 1;
+                while (nextIdx < targetCode.length && targetCode[nextIdx] === " ") {
+                    autoIndent += " ";
+                    nextIdx++;
+                }
+
+                var insertText = "\n" + autoIndent;
+                var beforeEnter = typingInput.value.substring(0, startPos);
+                var afterEnter = typingInput.value.substring(typingInput.selectionEnd);
+                typingInput.value = beforeEnter + insertText + afterEnter;
+                typingInput.selectionStart = typingInput.selectionEnd = startPos + insertText.length;
+
+                totalKeystrokes += insertText.length;
+            } else {
+                // User pressed Enter when newline was not expected
+                var beforeEnter = typingInput.value.substring(0, startPos);
+                var afterEnter = typingInput.value.substring(typingInput.selectionEnd);
+                typingInput.value = beforeEnter + "\n" + afterEnter;
+                typingInput.selectionStart = typingInput.selectionEnd = startPos + 1;
+
+                totalKeystrokes++;
                 mistakes++;
             }
 
