@@ -79,11 +79,6 @@ Then open `http://127.0.0.1:5000` in a web browser.
 - Per-key statistics and keyboard heatmaps.
 - Performance charts.
 
-## Acknowledgements / AI Assistance
+## Acknowledgements
 
-This project was developed with AI assistance:
-
-- **ChatGPT** was used for project planning and specification development.
-- **Google Antigravity** was used to assist with implementation of the application code, templates, styling, and documentation.
-
-All AI-generated code was reviewed, understood, and tested by the developer. AI assistance is cited in individual source files where applicable.
+This project was developed with AI assistance. All AI-generated code was reviewed, understood, and tested by the developer. AI assistance is cited in individual source files where applicable.
