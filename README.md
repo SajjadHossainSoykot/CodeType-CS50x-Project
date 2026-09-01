@@ -26,7 +26,7 @@ The History page shows summary statistics (total tests, best WPM, average WPM, a
 - **templates/index.html** — The home page template with the hero section, interactive language and difficulty selectors, and the Start Practice button.
 - **templates/test.html** — The typing test page. Embeds the snippet data as a JSON script element using Jinja's `tojson` filter for safe transmission to JavaScript.
 - **templates/history.html** — The history page displaying summary cards, per-language statistics table, recent attempts table, and the clear history form.
-- **static/styles.css** — All visual styling: dark color palette, responsive layouts, character state classes (`.correct`, `.incorrect`, `.current`), cards, badges, tables, and a subtle cursor blink animation.
+- **static/styles.css** —Custom styling for the typing engine, including correct, incorrect, and current character states, newline indicators, cursor effects, and the hidden typing input. Bootstrap handles most of the overall responsive layout and dark interface.
 - **static/test.js** — The client-side typing engine. Handles snippet rendering, input tracking, timer management, WPM/accuracy calculations, test completion detection, result saving via fetch, and restart functionality.
 
 ## Database
@@ -37,12 +37,12 @@ Snippets are stored in `snippets.json` rather than SQLite because they are stati
 
 ## Typing Algorithm
 
-The timer starts when the user types the first character and updates every 100 milliseconds. Each non-modifier keypress increments a keystroke counter. When a character is typed, it is compared against the expected character at that position in the target snippet; if it does not match, the mistake counter increments. Pressing Backspace does not decrement the mistake counter—mistakes, once made, are permanent in the statistics even if corrected. Live WPM is calculated as `(typed_character_count / 5) / elapsed_minutes`, using the standard five-characters-per-word convention (which equals target snippet length upon test completion). Accuracy is `((total_keystrokes - mistakes) / total_keystrokes) * 100`, clamped between 0 and 100. The test completes automatically when the textarea value exactly equals the target snippet string.
+The timer starts when the user types the first character and updates every 100 milliseconds. Each character entered contributes to the character-entry counter. Printable characters and newlines count individually, while pressing Tab inserts and counts four spaces. When a character is typed, it is compared against the expected character at that position in the target snippet; if it does not match, the mistake counter increments. Pressing Backspace does not decrement the mistake counter—mistakes, once made, are permanent in the statistics even if corrected. Live WPM is calculated as `(typed_character_count / 5) / elapsed_minutes`, using the standard five-characters-per-word convention (which equals target snippet length upon test completion). Accuracy is `((total_keystrokes - mistakes) / total_keystrokes) * 100`, clamped between 0 and 100. The test completes automatically when the textarea value exactly equals the target snippet string.
 
 ## Design Decisions
 
 - **Flask over a frontend framework**: Server-rendered pages with minimal JavaScript keep the project understandable. React or Next.js would add unnecessary complexity.
-- **SQLite for persistence**: No external database server required. The database file and schema are created automatically when needed.
+- **SQLite for persistence**: No external database server required. The SQLite database and schema are initialized automatically when the database file is first created.
 - **JSON for snippets**: Snippets are static read-only content, best kept in a version-controllable flat file.
 - **No user accounts**: Authentication would add complexity without improving the core typing-practice experience.
 - **Completion requires matching**: The test only finishes when typed text exactly matches the target, ensuring WPM reflects the full snippet.
@@ -82,4 +82,4 @@ Then open `http://127.0.0.1:5000` in a web browser.
 
 ## Acknowledgements
 
-This project was developed with AI assistance. All AI-generated code was reviewed, understood, and tested by the developer. AI assistance is cited in individual source files where applicable.
+ChatGPT was used for project planning, brainstorming, and specification assistance. Google Antigravity was used to assist with portions of the project's implementation. AI-assisted code was reviewed and modified by the developer.

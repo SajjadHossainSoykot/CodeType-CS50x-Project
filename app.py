@@ -47,6 +47,7 @@ def init_db():
 
 # ---------------------------------------------------------------------------
 # Snippet helpers
+#AI assistance: Google Antigravity assisted with some portions of this file.
 # ---------------------------------------------------------------------------
 
 def load_snippets():
