@@ -15,26 +15,33 @@ app.secret_key = os.urandom(24)
 LANGUAGES = ["C", "Python", "SQL", "HTML", "JavaScript"]
 DIFFICULTIES = ["easy", "medium", "hard"]
 
-# ---------------------------------------------------------------------------
-# Database helpers
-# ---------------------------------------------------------------------------
+# Absolute base directory for file paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-DATABASE = "codetype.db"
+# On Vercel (or serverless environments), use /tmp for writable SQLite database
+if os.environ.get("VERCEL"):
+    DATABASE = "/tmp/codetype.db"
+else:
+    DATABASE = os.path.join(BASE_DIR, "codetype.db")
 
 
 def get_db_connection():
-    """Open a connection to the SQLite database."""
+    """Open a connection to the SQLite database and ensure tables exist."""
+    db_exists = os.path.exists(DATABASE)
     conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
+    if not db_exists:
+        schema_path = os.path.join(BASE_DIR, "schema.sql")
+        if os.path.exists(schema_path):
+            with open(schema_path, "r") as f:
+                conn.executescript(f.read())
+            conn.commit()
     return conn
 
 
 def init_db():
     """Create the database tables from schema.sql if they don't exist."""
     conn = get_db_connection()
-    with open("schema.sql", "r") as f:
-        conn.executescript(f.read())
-    conn.commit()
     conn.close()
 
 
@@ -44,7 +51,8 @@ def init_db():
 
 def load_snippets():
     """Load all snippets from snippets.json."""
-    with open("snippets.json", "r") as f:
+    snippets_path = os.path.join(BASE_DIR, "snippets.json")
+    with open(snippets_path, "r") as f:
         return json.load(f)
 
 
