@@ -21,7 +21,7 @@ The History page shows summary statistics (total tests, best WPM, average WPM, a
 
 - **app.py** — The Flask application. Contains database initialization, snippet loading, server-side validation, and all five routes (home, test, API save, history, clear history).
 - **schema.sql** — Defines the `attempts` table schema. Uses `CREATE TABLE IF NOT EXISTS` so the database initializes safely on first run and on every subsequent startup.
-- **snippets.json** — A JSON file containing 50 code snippets organized by language and difficulty. Each snippet has a unique ID and a `code` string preserving exact whitespace, indentation, and special characters.
+- **snippets.json** — A JSON file containing 90 code snippets organized by language and difficulty. Each snippet has a unique ID and a `code` string preserving exact whitespace, indentation, and special characters.
 - **templates/layout.html** — The base Jinja2 template providing the navigation bar, flash message area, content block, footer, and font imports.
 - **templates/index.html** — The home page template with the hero section, interactive language and difficulty selectors, and the Start Practice button.
 - **templates/test.html** — The typing test page. Embeds the snippet data as a JSON script element using Jinja's `tojson` filter for safe transmission to JavaScript.
