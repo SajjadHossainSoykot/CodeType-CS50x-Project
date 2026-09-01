@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+
+{% block title %}CodeType — History{% endblock %}
+
+{% block content %}
+<div class="mx-auto" style="max-width: 900px;">
+    <h1 class="h2 font-monospace fw-bold mb-4">Your History</h1>
+
+    <!-- Summary statistics -->
+    <div class="row g-3 mb-4 text-center">
+        <div class="col-6 col-md-3">
+            <div class="card bg-body-tertiary border-secondary-subtle p-3">
+                <span class="d-block font-monospace fs-2 fw-bold text-info">{{ summary['total'] or 0 }}</span>
+                <span class="d-block text-muted small text-uppercase font-monospace">Tests Completed</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-body-tertiary border-secondary-subtle p-3">
+                <span class="d-block font-monospace fs-2 fw-bold text-info">
+                    {% if summary['best_wpm'] is not none %}
+                        {{ "%.1f" | format(summary['best_wpm']) }}
+                    {% else %}
+                        --
+                    {% endif %}
+                </span>
+                <span class="d-block text-muted small text-uppercase font-monospace">Best WPM</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-body-tertiary border-secondary-subtle p-3">
+                <span class="d-block font-monospace fs-2 fw-bold text-info">
+                    {% if summary['avg_wpm'] is not none %}
+                        {{ "%.1f" | format(summary['avg_wpm']) }}
+                    {% else %}
+                        --
+                    {% endif %}
+                </span>
+                <span class="d-block text-muted small text-uppercase font-monospace">Average WPM</span>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-body-tertiary border-secondary-subtle p-3">
+                <span class="d-block font-monospace fs-2 fw-bold text-info">
+                    {% if summary['avg_accuracy'] is not none %}
+                        {{ "%.1f" | format(summary['avg_accuracy']) }}%
+                    {% else %}
+                        --
+                    {% endif %}
+                </span>
+                <span class="d-block text-muted small text-uppercase font-monospace">Average Accuracy</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Per-language breakdown -->
+    {% if lang_stats %}
+    <div class="card bg-body-tertiary border-secondary-subtle mb-4">
+        <div class="card-header bg-transparent border-secondary-subtle">
+            <h2 class="h5 font-monospace fw-semibold mb-0">Performance by Language</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead>
+                        <tr class="text-muted small text-uppercase font-monospace">
+                            <th>Language</th>
+                            <th>Tests</th>
+                            <th>Best WPM</th>
+                            <th>Avg WPM</th>
+                            <th>Avg Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in lang_stats %}
+                        <tr>
+                            <td><span class="badge bg-info text-dark font-monospace">{{ row['language'] }}</span></td>
+                            <td class="font-monospace">{{ row['tests'] }}</td>
+                            <td class="font-monospace fw-bold text-success">{{ "%.1f" | format(row['best_wpm']) }}</td>
+                            <td class="font-monospace">{{ "%.1f" | format(row['avg_wpm']) }}</td>
+                            <td class="font-monospace">{{ "%.1f" | format(row['avg_accuracy']) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent attempts -->
+    {% if attempts %}
+    <div class="card bg-body-tertiary border-secondary-subtle mb-4">
+        <div class="card-header bg-transparent border-secondary-subtle">
+            <h2 class="h5 font-monospace fw-semibold mb-0">Recent Attempts</h2>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead>
+                        <tr class="text-muted small text-uppercase font-monospace">
+                            <th>Date</th>
+                            <th>Language</th>
+                            <th>Difficulty</th>
+                            <th>WPM</th>
+                            <th>Accuracy</th>
+                            <th>Mistakes</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in attempts %}
+                        <tr>
+                            <td class="small text-muted font-monospace">{{ row['created_at'] }}</td>
+                            <td><span class="badge bg-info text-dark font-monospace">{{ row['language'] }}</span></td>
+                            <td>
+                                <span class="badge {% if row['difficulty'] == 'easy' %}bg-success{% elif row['difficulty'] == 'medium' %}bg-warning text-dark{% else %}bg-danger{% endif %} font-monospace">
+                                    {{ row['difficulty'] | capitalize }}
+                                </span>
+                            </td>
+                            <td class="font-monospace fw-bold text-success">{{ "%.1f" | format(row['wpm']) }}</td>
+                            <td class="font-monospace">{{ "%.1f" | format(row['accuracy']) }}%</td>
+                            <td class="font-monospace text-danger">{{ row['errors'] }}</td>
+                            <td class="font-monospace">{{ "%.1f" | format(row['duration_seconds']) }}s</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not attempts %}
+    <div class="card bg-body-tertiary border-secondary-subtle p-5 text-center mb-4">
+        <p class="text-secondary mb-0">No attempts yet. <a href="{{ url_for('index') }}" class="text-info">Start practicing!</a></p>
+    </div>
+    {% endif %}
+
+    <!-- Clear history -->
+    {% if attempts %}
+    <div class="text-end">
+        <form action="{{ url_for('clear_history') }}" method="post" id="clear-form">
+            <button type="submit" class="btn btn-outline-danger font-monospace" id="clear-btn">Clear History</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Confirmation before clearing history
+    const clearForm = document.getElementById('clear-form');
+    if (clearForm) {
+        clearForm.addEventListener('submit', function(e) {
+            if (!confirm('Are you sure you want to clear all history? This cannot be undone.')) {
+                e.preventDefault();
+            }
+        });
+    }
+</script>
+{% endblock %}
