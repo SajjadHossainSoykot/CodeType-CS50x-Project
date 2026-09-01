@@ -1,0 +1,65 @@
+/* AI assistance: Google Antigravity assisted with portions of this file. */
+
+/* ============================================
+   Custom Typing Engine Tokens & Character States
+   ============================================ */
+:root {
+    --correct-bg: rgba(25, 135, 84, 0.25);
+    --correct-text: #4ade80;
+    --incorrect-bg: rgba(220, 53, 69, 0.35);
+    --incorrect-text: #fca5a5;
+    --current-bg: rgba(13, 202, 240, 0.25);
+    --current-border: #0dcaf0;
+}
+
+/* Cursor pointer helper */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Character states in typing display */
+.char {
+    position: relative;
+    transition: color 0.1s, background-color 0.1s;
+}
+
+.char.correct {
+    color: var(--correct-text);
+    background-color: var(--correct-bg);
+    border-radius: 2px;
+}
+
+.char.incorrect {
+    color: var(--incorrect-text);
+    background-color: var(--incorrect-bg);
+    border-radius: 2px;
+}
+
+.char.current {
+    background-color: var(--current-bg);
+    border-radius: 2px;
+    border-bottom: 2px solid var(--current-border);
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% { border-bottom-color: transparent; }
+}
+
+/* Newline character indicator */
+.char-newline::after {
+    content: "↵";
+    color: var(--bs-secondary-color, #6c757d);
+    opacity: 0.4;
+    font-size: 0.85em;
+    margin-right: 0.1em;
+}
+
+/* Hidden typing textarea overlay */
+.typing-input {
+    resize: none;
+    outline: none;
+    background: transparent;
+    color: transparent;
+    caret-color: transparent;
+}

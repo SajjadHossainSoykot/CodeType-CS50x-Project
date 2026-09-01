@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block title %}CodeType — Programming Typing Practice{% endblock %}
+
+{% block content %}
+<div class="text-center py-4 mb-4">
+    <h1 class="display-4 font-monospace fw-bold mb-3">
+        <span class="text-info">&lt;</span>CodeType<span class="text-info">/&gt;</span>
+    </h1>
+    <p class="lead text-secondary mx-auto" style="max-width: 500px;">
+        Practice typing real code. Improve your speed and accuracy.
+    </p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card bg-body-tertiary border-secondary-subtle shadow-sm p-4">
+            <form action="{{ url_for('test') }}" method="get" id="setup-form">
+
+                <!-- Language Selection -->
+                <div class="mb-4">
+                    <label class="form-label font-monospace fw-semibold text-secondary small text-uppercase tracking-wider">
+                        1. Choose a Language
+                    </label>
+                    <div class="d-flex flex-wrap gap-2" id="language-grid">
+                        {% for lang in languages %}
+                        <button type="button"
+                                class="btn btn-outline-info lang-btn px-3 py-2"
+                                data-value="{{ lang }}"
+                                id="lang-{{ lang | lower }}">
+                            {{ lang }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="lang" id="lang-input" required>
+                </div>
+
+                <!-- Difficulty Selection -->
+                <div class="mb-4">
+                    <label class="form-label font-monospace fw-semibold text-secondary small text-uppercase tracking-wider">
+                        2. Choose Difficulty
+                    </label>
+                    <div class="d-flex flex-wrap gap-2" id="difficulty-grid">
+                        {% for diff in difficulties %}
+                        <button type="button"
+                                class="btn btn-outline-secondary diff-btn px-3 py-2"
+                                data-value="{{ diff }}"
+                                id="diff-{{ diff }}">
+                            {{ diff | capitalize }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="diff" id="diff-input" required>
+                </div>
+
+                <!-- Start Button -->
+                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 font-monospace fw-bold" id="start-btn" disabled>
+                    Start Practice &rarr;
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Language selection
+    const langButtons = document.querySelectorAll('.lang-btn');
+    const langInput = document.getElementById('lang-input');
+    const diffButtons = document.querySelectorAll('.diff-btn');
+    const diffInput = document.getElementById('diff-input');
+    const startBtn = document.getElementById('start-btn');
+
+    function updateStartButton() {
+        startBtn.disabled = !(langInput.value && diffInput.value);
+    }
+
+    langButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            langButtons.forEach(function(b) {
+                b.classList.remove('active', 'btn-info', 'text-dark');
+                b.classList.add('btn-outline-info');
+            });
+            btn.classList.remove('btn-outline-info');
+            btn.classList.add('active', 'btn-info', 'text-dark');
+            langInput.value = btn.dataset.value;
+            updateStartButton();
+        });
+    });
+
+    diffButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            diffButtons.forEach(function(b) {
+                b.classList.remove('active', 'btn-warning', 'text-dark');
+                b.classList.add('btn-outline-secondary');
+            });
+            btn.classList.remove('btn-outline-secondary');
+            btn.classList.add('active', 'btn-warning', 'text-dark');
+            diffInput.value = btn.dataset.value;
+            updateStartButton();
+        });
+    });
+</script>
+{% endblock %}
