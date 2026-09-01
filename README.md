@@ -81,5 +81,4 @@ Then open `http://127.0.0.1:5000` in a web browser.
 - Performance charts.
 
 ## Acknowledgements
-
-ChatGPT was used for project planning, brainstorming, and specification assistance. Google Antigravity was used to assist with portions of the project's implementation. AI-assisted code was reviewed and modified by the developer.
+Google Antigravity was used to assist with portions of the project's implementation. AI-assisted code was reviewed and modified by the developer.
