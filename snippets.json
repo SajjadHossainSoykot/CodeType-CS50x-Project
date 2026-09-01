@@ -1,0 +1,242 @@
+{
+    "C": {
+        "easy": [
+            {
+                "id": "c-easy-1",
+                "code": "printf(\"Hello, world!\\n\");"
+            },
+            {
+                "id": "c-easy-2",
+                "code": "int x = 42;"
+            },
+            {
+                "id": "c-easy-3",
+                "code": "return 0;"
+            },
+            {
+                "id": "c-easy-4",
+                "code": "char c = 'A';"
+            }
+        ],
+        "medium": [
+            {
+                "id": "c-medium-1",
+                "code": "for (int i = 0; i < 10; i++)\n{\n    printf(\"%d\\n\", i);\n}"
+            },
+            {
+                "id": "c-medium-2",
+                "code": "if (x > 0)\n{\n    printf(\"positive\\n\");\n}"
+            },
+            {
+                "id": "c-medium-3",
+                "code": "int sum = 0;\nfor (int i = 1; i <= n; i++)\n{\n    sum += i;\n}"
+            }
+        ],
+        "hard": [
+            {
+                "id": "c-hard-1",
+                "code": "#include <stdio.h>\n\nint main(void)\n{\n    for (int i = 0; i < 5; i++)\n    {\n        printf(\"i is %d\\n\", i);\n    }\n    return 0;\n}"
+            },
+            {
+                "id": "c-hard-2",
+                "code": "int factorial(int n)\n{\n    if (n <= 1)\n    {\n        return 1;\n    }\n    return n * factorial(n - 1);\n}"
+            },
+            {
+                "id": "c-hard-3",
+                "code": "void swap(int *a, int *b)\n{\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}"
+            }
+        ]
+    },
+    "Python": {
+        "easy": [
+            {
+                "id": "python-easy-1",
+                "code": "print(\"Hello, world!\")"
+            },
+            {
+                "id": "python-easy-2",
+                "code": "x = int(input(\"x: \"))"
+            },
+            {
+                "id": "python-easy-3",
+                "code": "name = \"Alice\""
+            },
+            {
+                "id": "python-easy-4",
+                "code": "numbers = [1, 2, 3, 4, 5]"
+            }
+        ],
+        "medium": [
+            {
+                "id": "python-medium-1",
+                "code": "for i in range(10):\n    print(i)"
+            },
+            {
+                "id": "python-medium-2",
+                "code": "if x > 0:\n    print(\"positive\")\nelse:\n    print(\"non-positive\")"
+            },
+            {
+                "id": "python-medium-3",
+                "code": "words = sentence.split()\nfor word in words:\n    print(word)"
+            }
+        ],
+        "hard": [
+            {
+                "id": "python-hard-1",
+                "code": "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)"
+            },
+            {
+                "id": "python-hard-2",
+                "code": "def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n ** 0.5) + 1):\n        if n % i == 0:\n            return False\n    return True"
+            },
+            {
+                "id": "python-hard-3",
+                "code": "def fibonacci(n):\n    a, b = 0, 1\n    result = []\n    for i in range(n):\n        result.append(a)\n        a, b = b, a + b\n    return result"
+            }
+        ]
+    },
+    "SQL": {
+        "easy": [
+            {
+                "id": "sql-easy-1",
+                "code": "SELECT * FROM users;"
+            },
+            {
+                "id": "sql-easy-2",
+                "code": "SELECT name FROM students;"
+            },
+            {
+                "id": "sql-easy-3",
+                "code": "INSERT INTO users (name) VALUES ('Alice');"
+            },
+            {
+                "id": "sql-easy-4",
+                "code": "DELETE FROM logs WHERE id = 1;"
+            }
+        ],
+        "medium": [
+            {
+                "id": "sql-medium-1",
+                "code": "SELECT name, age\nFROM users\nWHERE age >= 18\nORDER BY name;"
+            },
+            {
+                "id": "sql-medium-2",
+                "code": "UPDATE products\nSET price = price * 1.1\nWHERE category = 'electronics';"
+            },
+            {
+                "id": "sql-medium-3",
+                "code": "SELECT COUNT(*) AS total\nFROM orders\nWHERE status = 'shipped';"
+            }
+        ],
+        "hard": [
+            {
+                "id": "sql-hard-1",
+                "code": "SELECT students.name, courses.title\nFROM students\nJOIN enrollments ON students.id = enrollments.student_id\nJOIN courses ON enrollments.course_id = courses.id\nORDER BY students.name;"
+            },
+            {
+                "id": "sql-hard-2",
+                "code": "SELECT department, AVG(salary) AS avg_salary\nFROM employees\nWHERE hire_date >= '2020-01-01'\nGROUP BY department\nHAVING AVG(salary) > 50000\nORDER BY avg_salary DESC;"
+            },
+            {
+                "id": "sql-hard-3",
+                "code": "CREATE TABLE IF NOT EXISTS reviews (\n    id INTEGER PRIMARY KEY AUTOINCREMENT,\n    user_id INTEGER NOT NULL,\n    product_id INTEGER NOT NULL,\n    rating INTEGER NOT NULL,\n    comment TEXT,\n    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);"
+            }
+        ]
+    },
+    "HTML": {
+        "easy": [
+            {
+                "id": "html-easy-1",
+                "code": "<h1>Hello, world!</h1>"
+            },
+            {
+                "id": "html-easy-2",
+                "code": "<a href=\"/about\">About</a>"
+            },
+            {
+                "id": "html-easy-3",
+                "code": "<img src=\"photo.jpg\" alt=\"Photo\">"
+            },
+            {
+                "id": "html-easy-4",
+                "code": "<p>This is a paragraph.</p>"
+            }
+        ],
+        "medium": [
+            {
+                "id": "html-medium-1",
+                "code": "<ul>\n    <li>First item</li>\n    <li>Second item</li>\n    <li>Third item</li>\n</ul>"
+            },
+            {
+                "id": "html-medium-2",
+                "code": "<form action=\"/login\" method=\"post\">\n    <input type=\"text\" name=\"username\">\n    <button type=\"submit\">Log In</button>\n</form>"
+            },
+            {
+                "id": "html-medium-3",
+                "code": "<table>\n    <tr>\n        <th>Name</th>\n        <th>Age</th>\n    </tr>\n</table>"
+            }
+        ],
+        "hard": [
+            {
+                "id": "html-hard-1",
+                "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>My Page</title>\n</head>\n<body>\n    <h1>Welcome</h1>\n</body>\n</html>"
+            },
+            {
+                "id": "html-hard-2",
+                "code": "<nav>\n    <ul>\n        <li><a href=\"/\">Home</a></li>\n        <li><a href=\"/about\">About</a></li>\n        <li><a href=\"/contact\">Contact</a></li>\n    </ul>\n</nav>"
+            },
+            {
+                "id": "html-hard-3",
+                "code": "<form action=\"/register\" method=\"post\">\n    <label for=\"name\">Name:</label>\n    <input type=\"text\" id=\"name\" name=\"name\" required>\n    <label for=\"email\">Email:</label>\n    <input type=\"email\" id=\"email\" name=\"email\" required>\n    <button type=\"submit\">Register</button>\n</form>"
+            }
+        ]
+    },
+    "JavaScript": {
+        "easy": [
+            {
+                "id": "js-easy-1",
+                "code": "console.log(\"Hello, world!\");"
+            },
+            {
+                "id": "js-easy-2",
+                "code": "let x = 42;"
+            },
+            {
+                "id": "js-easy-3",
+                "code": "const name = \"Alice\";"
+            },
+            {
+                "id": "js-easy-4",
+                "code": "let items = [1, 2, 3];"
+            }
+        ],
+        "medium": [
+            {
+                "id": "js-medium-1",
+                "code": "for (let i = 0; i < 10; i++) {\n    console.log(i);\n}"
+            },
+            {
+                "id": "js-medium-2",
+                "code": "if (score >= 90) {\n    grade = \"A\";\n} else {\n    grade = \"B\";\n}"
+            },
+            {
+                "id": "js-medium-3",
+                "code": "const doubled = numbers.map(function(n) {\n    return n * 2;\n});"
+            }
+        ],
+        "hard": [
+            {
+                "id": "js-hard-1",
+                "code": "function factorial(n) {\n    if (n <= 1) {\n        return 1;\n    }\n    return n * factorial(n - 1);\n}"
+            },
+            {
+                "id": "js-hard-2",
+                "code": "async function fetchData(url) {\n    try {\n        const response = await fetch(url);\n        const data = await response.json();\n        return data;\n    } catch (error) {\n        console.error(\"Fetch failed:\", error);\n    }\n}"
+            },
+            {
+                "id": "js-hard-3",
+                "code": "document.addEventListener(\"DOMContentLoaded\", function() {\n    const button = document.getElementById(\"submit\");\n    button.addEventListener(\"click\", function() {\n        alert(\"Button clicked!\");\n    });\n});"
+            }
+        ]
+    }
+}
