@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block title %}CodeType — {{ language }} ({{ difficulty | capitalize }}){% endblock %}
+
+{% block content %}
+<div class="mx-auto" style="max-width: 800px;">
+    <!-- Test header -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-info text-dark font-monospace fs-6 px-3 py-2">{{ language }}</span>
+            <span class="badge {% if difficulty == 'easy' %}bg-success{% elif difficulty == 'medium' %}bg-warning text-dark{% else %}bg-danger{% endif %} font-monospace fs-6 px-3 py-2">
+                {{ difficulty | capitalize }}
+            </span>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm font-monospace" id="restart-btn" title="Restart test">
+            &circlearrowright; Restart
+        </button>
+    </div>
+
+    <!-- Live stats HUD -->
+    <div class="row g-2 mb-3 text-center">
+        <div class="col-3">
+            <div class="card bg-body-tertiary border-secondary-subtle py-2">
+                <span class="text-muted font-monospace small text-uppercase">Time</span>
+                <span class="font-monospace fw-bold fs-4 text-body" id="stat-time">0.0s</span>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card bg-body-tertiary border-secondary-subtle py-2">
+                <span class="text-muted font-monospace small text-uppercase">WPM</span>
+                <span class="font-monospace fw-bold fs-4 text-info" id="stat-wpm">0</span>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card bg-body-tertiary border-secondary-subtle py-2">
+                <span class="text-muted font-monospace small text-uppercase">Accuracy</span>
+                <span class="font-monospace fw-bold fs-4 text-success" id="stat-accuracy">100%</span>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="card bg-body-tertiary border-secondary-subtle py-2">
+                <span class="text-muted font-monospace small text-uppercase">Mistakes</span>
+                <span class="font-monospace fw-bold fs-4 text-danger" id="stat-mistakes">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Typing area -->
+    <div class="card bg-body-tertiary border-secondary-subtle p-4 mb-2 shadow-sm position-relative cursor-pointer" id="typing-area" style="min-height: 140px;">
+        <div class="code-display font-monospace fs-5" id="code-display" style="line-height: 1.75; white-space: pre-wrap; word-wrap: break-word;"></div>
+        <textarea class="typing-input position-absolute top-0 start-0 w-100 h-100 opacity-0 border-0" id="typing-input"
+                  spellcheck="false" autocomplete="off" autocorrect="off"
+                  autocapitalize="off" autofocus></textarea>
+    </div>
+
+    <p class="text-center text-muted small" id="typing-hint">Start typing to begin the test...</p>
+
+    <!-- Result panel (hidden until test finishes) -->
+    <div class="card bg-body-tertiary border-success mt-4 p-4 text-center shadow-lg" id="result-panel" style="display: none;">
+        <h2 class="h3 font-monospace fw-bold text-success mb-3">Test Complete!</h2>
+        <div class="row g-2 mb-3">
+            <div class="col-4">
+                <div class="p-2 bg-body rounded border border-secondary-subtle">
+                    <span class="d-block text-muted small text-uppercase font-monospace">Language</span>
+                    <span class="fw-bold font-monospace text-info" id="result-language">{{ language }}</span>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-2 bg-body rounded border border-secondary-subtle">
+                    <span class="d-block text-muted small text-uppercase font-monospace">Difficulty</span>
+                    <span class="fw-bold font-monospace" id="result-difficulty">{{ difficulty | capitalize }}</span>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-2 bg-body rounded border border-secondary-subtle">
+                    <span class="d-block text-muted small text-uppercase font-monospace">Time</span>
+                    <span class="fw-bold font-monospace" id="result-time">0s</span>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-2 bg-body rounded border border-success">
+                    <span class="d-block text-muted small text-uppercase font-monospace">WPM</span>
+                    <span class="fw-bold fs-4 font-monospace text-success" id="result-wpm">0</span>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-2 bg-body rounded border border-success">
+                    <span class="d-block text-muted small text-uppercase font-monospace">Accuracy</span>
+                    <span class="fw-bold fs-4 font-monospace text-success" id="result-accuracy">0%</span>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-2 bg-body rounded border border-secondary-subtle">
+                    <span class="d-block text-muted small text-uppercase font-monospace">Mistakes</span>
+                    <span class="fw-bold fs-4 font-monospace text-danger" id="result-mistakes">0</span>
+                </div>
+            </div>
+        </div>
+        <p class="small text-muted mb-3" id="result-save-msg"></p>
+        <div class="d-flex justify-content-center gap-2 flex-wrap">
+            <button class="btn btn-success px-4 font-monospace fw-bold" id="try-again-btn">Try Again</button>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-info px-4 font-monospace">New Test</a>
+            <a href="{{ url_for('history') }}" class="btn btn-outline-secondary px-4 font-monospace">View History</a>
+        </div>
+    </div>
+</div>
+
+<!-- Snippet data (safely embedded via tojson) -->
+<script id="snippet-data" type="application/json" data-language="{{ language }}" data-difficulty="{{ difficulty }}">{{ snippet | tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='test.js') }}"></script>
+{% endblock %}
