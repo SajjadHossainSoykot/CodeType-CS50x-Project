@@ -20,7 +20,7 @@ The History page shows summary statistics (total tests, best WPM, average WPM, a
 ## Files
 
 - **app.py** — The Flask application. Contains database initialization, snippet loading, server-side validation, and all five routes (home, test, API save, history, clear history).
-- **schema.sql** — Defines the `attempts` table schema. Uses `CREATE TABLE IF NOT EXISTS` so the database initializes safely on first run and on every subsequent startup.
+- **schema.sql** — Defines the `attempts` table schema. Used to automatically create the database and table schema when needed.
 - **snippets.json** — A JSON file containing 90 code snippets organized by language and difficulty. Each snippet has a unique ID and a `code` string preserving exact whitespace, indentation, and special characters.
 - **templates/layout.html** — The base Jinja2 template providing the navigation bar, flash message area, content block, footer, and font imports.
 - **templates/index.html** — The home page template with the hero section, interactive language and difficulty selectors, and the Start Practice button.
@@ -37,12 +37,12 @@ Snippets are stored in `snippets.json` rather than SQLite because they are stati
 
 ## Typing Algorithm
 
-The timer starts when the user types the first character and updates every 100 milliseconds. Each non-modifier keypress increments a keystroke counter. When a character is typed, it is compared against the expected character at that position in the target snippet; if it does not match, the mistake counter increments. Pressing Backspace does not decrement the mistake counter—mistakes, once made, are permanent in the statistics even if corrected. WPM is calculated as `(target_character_count / 5) / elapsed_minutes`, using the standard five-characters-per-word convention. Accuracy is `((total_keystrokes - mistakes) / total_keystrokes) * 100`, clamped between 0 and 100. The test completes automatically when the textarea value exactly equals the target snippet string.
+The timer starts when the user types the first character and updates every 100 milliseconds. Each non-modifier keypress increments a keystroke counter. When a character is typed, it is compared against the expected character at that position in the target snippet; if it does not match, the mistake counter increments. Pressing Backspace does not decrement the mistake counter—mistakes, once made, are permanent in the statistics even if corrected. Live WPM is calculated as `(typed_character_count / 5) / elapsed_minutes`, using the standard five-characters-per-word convention (which equals target snippet length upon test completion). Accuracy is `((total_keystrokes - mistakes) / total_keystrokes) * 100`, clamped between 0 and 100. The test completes automatically when the textarea value exactly equals the target snippet string.
 
 ## Design Decisions
 
 - **Flask over a frontend framework**: Server-rendered pages with minimal JavaScript keep the project understandable. React or Next.js would add unnecessary complexity.
-- **SQLite for persistence**: No external database server required. The database file is auto-created on startup.
+- **SQLite for persistence**: No external database server required. The database file and schema are created automatically when needed.
 - **JSON for snippets**: Snippets are static read-only content, best kept in a version-controllable flat file.
 - **No user accounts**: Authentication would add complexity without improving the core typing-practice experience.
 - **Completion requires matching**: The test only finishes when typed text exactly matches the target, ensuring WPM reflects the full snippet.

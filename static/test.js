@@ -85,6 +85,7 @@
     function updateTimer() {
         elapsedSeconds = (Date.now() - startTime) / 1000;
         statTime.textContent = elapsedSeconds.toFixed(1) + "s";
+        statWpm.textContent = calculateWPM();
     }
 
     function stopTimer() {
@@ -105,7 +106,8 @@
     function calculateWPM() {
         if (elapsedSeconds < 0.5) return 0;
         var minutes = elapsedSeconds / 60;
-        var wordCount = targetCode.length / 5;
+        var typedCount = typingInput.value.length;
+        var wordCount = typedCount / 5;
         return Math.round((wordCount / minutes) * 10) / 10;
     }
 
@@ -255,6 +257,9 @@
     typingInput.addEventListener("input", function (e) {
         if (finished) return;
 
+        // Ensure caret remains strictly at the end of typed text
+        typingInput.selectionStart = typingInput.selectionEnd = typingInput.value.length;
+
         // Start timer on first character input
         if (!timerStarted && typingInput.value.length > 0) {
             startTimer();
@@ -265,30 +270,41 @@
     });
 
     // -----------------------------------------------------------------------
-    // Keydown handler — track keystrokes, handle Tab, prevent arrow-key cursor
+    // Keydown handler — sequential typing, character tracking, Tab & Enter
     // -----------------------------------------------------------------------
     typingInput.addEventListener("keydown", function (e) {
         if (finished) return;
 
+        // Prevent cursor movement and editing keys inside the text
+        const blockedKeys = [
+            "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+            "Home", "End", "PageUp", "PageDown", "Delete"
+        ];
+        if (blockedKeys.indexOf(e.key) !== -1) {
+            e.preventDefault();
+            return;
+        }
+
+        // Always keep caret at the end of the text
+        typingInput.selectionStart = typingInput.selectionEnd = typingInput.value.length;
+
         // Tab: insert 4 spaces
         if (e.key === "Tab") {
             e.preventDefault();
-            var start = typingInput.selectionStart;
-            var before = typingInput.value.substring(0, start);
-            var after = typingInput.value.substring(typingInput.selectionEnd);
-            typingInput.value = before + "    " + after;
-            typingInput.selectionStart = typingInput.selectionEnd = start + 4;
+            var startPos = typingInput.value.length;
 
-            // Start timer if needed
             if (!timerStarted) {
                 startTimer();
             }
 
-            // Count each space from Tab as a keystroke and check for mistakes
+            typingInput.value += "    ";
+            typingInput.selectionStart = typingInput.selectionEnd = typingInput.value.length;
+
+            // Check each of the 4 spaces against targetCode
             for (var s = 0; s < 4; s++) {
-                var pos = start + s;
+                var pos = startPos + s;
                 totalKeystrokes++;
-                if (pos < targetCode.length && " " !== targetCode[pos]) {
+                if (pos >= targetCode.length || targetCode[pos] !== " ") {
                     mistakes++;
                 }
             }
@@ -298,62 +314,40 @@
             return;
         }
 
-        // Track character-entry keystrokes (not modifiers/control/nav keys)
-        // Backspace is special: not a "typed character" keystroke
+        // Backspace: allowed, does not count as a typed character
         if (e.key === "Backspace") {
-            // Allowed, but does not count as a typed keystroke
             return;
         }
 
-        // Single printable character key
-        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-            totalKeystrokes++;
-            var curPos = typingInput.value.length;  // position before this char is added
-            if (curPos < targetCode.length && e.key !== targetCode[curPos]) {
-                mistakes++;
-            }
-        }
-
-        // Enter key → insert newline character & auto-indent matching leading spaces
+        // Enter key → insert newline character (user types indentation themselves or uses Tab)
         if (e.key === "Enter") {
             e.preventDefault();
-            var startPos = typingInput.selectionStart;
+            var curPos = typingInput.value.length;
 
             if (!timerStarted) {
                 startTimer();
             }
 
-            // Check if expected character is indeed a newline
-            if (startPos < targetCode.length && targetCode[startPos] === "\n") {
-                // Collect leading spaces on the next line for auto-indentation
-                var autoIndent = "";
-                var nextIdx = startPos + 1;
-                while (nextIdx < targetCode.length && targetCode[nextIdx] === " ") {
-                    autoIndent += " ";
-                    nextIdx++;
-                }
+            typingInput.value += "\n";
+            typingInput.selectionStart = typingInput.selectionEnd = typingInput.value.length;
 
-                var insertText = "\n" + autoIndent;
-                var beforeEnter = typingInput.value.substring(0, startPos);
-                var afterEnter = typingInput.value.substring(typingInput.selectionEnd);
-                typingInput.value = beforeEnter + insertText + afterEnter;
-                typingInput.selectionStart = typingInput.selectionEnd = startPos + insertText.length;
-
-                totalKeystrokes += insertText.length;
-            } else {
-                // User pressed Enter when newline was not expected
-                var beforeEnter = typingInput.value.substring(0, startPos);
-                var afterEnter = typingInput.value.substring(typingInput.selectionEnd);
-                typingInput.value = beforeEnter + "\n" + afterEnter;
-                typingInput.selectionStart = typingInput.selectionEnd = startPos + 1;
-
-                totalKeystrokes++;
+            totalKeystrokes++;
+            if (curPos >= targetCode.length || targetCode[curPos] !== "\n") {
                 mistakes++;
             }
 
             updateDisplay();
             checkCompletion();
             return;
+        }
+
+        // Single printable character key
+        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            totalKeystrokes++;
+            var curPos = typingInput.value.length; // position before this character is added
+            if (curPos >= targetCode.length || e.key !== targetCode[curPos]) {
+                mistakes++;
+            }
         }
     });
 
@@ -365,11 +359,12 @@
     });
 
     // -----------------------------------------------------------------------
-    // Keep focus on typing input when clicking the typing area
+    // Keep focus on typing input when clicking the typing area & enforce caret
     // -----------------------------------------------------------------------
     document.getElementById("typing-area").addEventListener("click", function () {
         if (!finished) {
             typingInput.focus();
+            typingInput.selectionStart = typingInput.selectionEnd = typingInput.value.length;
         }
     });
 
