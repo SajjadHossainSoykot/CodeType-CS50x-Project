@@ -1,9 +1,12 @@
-# CodeType
-#### Video Demo: <URL>
-#### Repository: https://github.com/SajjadHossainSoykot/CodeType-CS50x-Project
+# CodeType: Programming Typing Practice Web App
+#### Video Demo: https://youtu.be/vx2EkBozT_M
+
 #### Description:
 
 CodeType is a web application built as a CS50x 2026 final project that helps programmers practice typing real code. Traditional typing practice websites focus on ordinary prose—sentences and paragraphs of natural language—but programmers spend their time typing something fundamentally different: brackets, semicolons, indentation, operators, keywords, and structured syntax. CodeType addresses this gap by presenting actual code snippets from five popular programming languages and measuring the user's typing speed, accuracy, and mistake count as they reproduce each snippet character by character.
+
+#### Repository: https://github.com/SajjadHossainSoykot/CodeType-CS50x-Project
+#### Live Demo: https://codetype-cs50x.vercel.app/
 
 ## Features
 
